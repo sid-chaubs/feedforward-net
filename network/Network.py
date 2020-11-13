@@ -1,7 +1,7 @@
 from network.Activations import Activations
 from network.Losses import Losses
 import random
-import numpy as np
+import numpy
 from copy import deepcopy
 
 class Network:
@@ -23,10 +23,10 @@ class Network:
     self.initialize_hidden_layers()
 
   def init_weight(self) -> float:
-    return 2 * np.random.random() - 1
+    return 2 * numpy.random.random() - 1
 
   def initialize_weights(self) -> None:
-    np.random.seed(1)
+    numpy.random.seed(1)
 
     self.W = [
       [self.init_weight(), self.init_weight(), self.init_weight()],
@@ -113,13 +113,19 @@ class Network:
 
     for i in range(len(self.V)):
       for j in range(len(self.V[i])):
-        dLdV[i][j] = self.H[i] * dLdO[j]
+        dLdV[i][j] = dLdO[j] * self.H[i]
+
+    dLdH = [0.0, 0.0,0.0]
+
+    for i in range(len(self.V)):
+      for j in range(len(self.V[i])):
+        dLdH[i] += dLdO[j] * self.V[i][j]
 
     # Calculate the gradient of the loss (L) wrt to K
     dLdK = [0.0, 0.0, 0.0]
 
     for i in range(len(dLdK)):
-      dLdK[i] = Activations.sigmoid(self.K[i]) * Activations.sigmoid(1.0 - self.K[i])
+      dLdK[i] =  dLdH[i] * self.H[i] * (1.0 - self.H[i])
 
     # Calculate the gradient of the loss (L) wrt to weights W
     dLdW = [
@@ -185,5 +191,5 @@ class Network:
 
     return historical_losses
 
-  def predict(self, X: list) -> int:
+  def predict(self, X: list) -> list:
     return self.forward_propagate(X)
