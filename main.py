@@ -1,39 +1,54 @@
 from helpers.data import load_synth
 from network.Network import Network
 import matplotlib.pyplot as plt
+from network.LinearAlgebra import LinearAlgebra
 
 import random
 import math
 import sys
 import traceback
 
-# load the data
-data = load_synth()
-training_data = data[0]
-validation_data = data[1]
-
-# epoch implies a full pass over the entire dataset
-epochs = 5000
-learning_rate = 0.0001
-
 # gradient descent
 network = Network()
-loss_history = network.gradient_descent(learning_rate, epochs, training_data)
-count_accurate = 0
 
-for i in range(len(training_data[0])):
-  prediction = network.predict(training_data[0][i])
-  output = float(prediction.index(max(prediction)))
-  expected = float(training_data[1][i])
+print('Load existing model? Y / n')
 
-  print(f'Predicted {output}, Expected {expected}')
+load = input()
 
-  if output == expected:
-    count_accurate += 1
+if load == 'Y':
+  print('Enter file name:')
+  filename = input()
+  network.load(filename)
+  print('Model loaded successfully.')
+else:
+  print('Training a new model.')
 
-print('Accuracy: ', count_accurate, '/', len(training_data[0]))
+  # load the data
+  data = load_synth()
+  training_data = data[0]
+  validation_data = data[1]
+  learning_rate = 0.01
+  epochs = 30 # a full pass through the training data
 
-# plot the historical losses
-plt.plot(loss_history)
-plt.ylabel('Loss')
-plt.show()
+  loss_history = network.gradient_descent(learning_rate, epochs, training_data)
+  count_accurate = 0
+  test_set = validation_data
+
+  for i in range(len(test_set[0])):
+    prediction = network.predict(test_set[0][i])
+    to_array = [item for sublist in prediction for item in sublist]
+    predicted_class = to_array.index(max(to_array))
+    expected_class = int(test_set[1][i])
+
+    if predicted_class == expected_class:
+      count_accurate += 1
+
+  print('Save current model? Y / n')
+
+  save = input()
+  if save == 'Y':
+    print('Enter file name:')
+    filename = input()
+    network.save(filename)
+
+  print('Accuracy: ', count_accurate, '/', len(training_data[0]))

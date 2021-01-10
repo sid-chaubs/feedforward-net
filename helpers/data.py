@@ -24,7 +24,7 @@ def load_synth(num_train = 60_000, num_val = 10_000):
   :param num_features: Number of features per instance
   :return: Two tuples (xtrain, ytrain), (xval, yval) the training data is a floating point numpy array:
   """
-
+  np.random.seed(654)
   THRESHOLD = 0.6
   quad = np.asarray([[1, 0.5], [1, .2]])
 

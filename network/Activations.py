@@ -8,10 +8,10 @@ class Activations:
     return 1.0 / (1.0 + math.exp(-x))
 
   @staticmethod
-  def softmax(current: float, values: list) -> float:
+  def softmax(output: float, output_list: list) -> float:
     denominator = 0.0
 
-    for i in range(len(values)):
-      denominator += math.exp(values[i])
+    for i in range(len(output_list)):
+      denominator += math.exp(output_list[i])
 
-    return math.exp(current) / denominator
+    return math.exp(output) / denominator
