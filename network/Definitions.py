@@ -7,4 +7,4 @@ DIM_C = [2, 1]
 # dimensions for hidden layers
 DIM_K = [3, 1]
 DIM_H = DIM_K
-DIM_O = [2, 1]
+DIM_Y = [2, 1]
