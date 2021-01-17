@@ -1,18 +1,11 @@
-import random
-import math
+import numpy
 
 class Activations:
 
   @staticmethod
-  def sigmoid(x):
-    return 1.0 / (1.0 + math.exp(-x))
+  def sigmoid(X):
+    return 1 / (1 + numpy.exp(-X))
 
   @staticmethod
-  def softmax(x: list, index: int) -> float:
-    denominator = sum([math.exp(i) for i in x])
-    return math.exp(x[index]) / denominator
-  
-  @staticmethod
-  def softmax_main(x: list, index: int) -> float:
-    denominator = sum([math.exp(i[0]) for i in x])
-    return math.exp(x[index][0]) / denominator
+  def softmax(Y, target):
+    return numpy.exp(Y[target]) / sum([numpy.exp(i) for i in Y])
